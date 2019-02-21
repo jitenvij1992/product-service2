@@ -1,6 +1,6 @@
-package com.epam.productservice.dao;
+package com.jpop.productservice.dao;
 
-import com.epam.productservice.model.Product;
+import com.jpop.productservice.model.Product;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

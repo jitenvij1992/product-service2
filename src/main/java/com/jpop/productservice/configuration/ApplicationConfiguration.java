@@ -1,4 +1,4 @@
-package com.epam.productservice.configuration;
+package com.jpop.productservice.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

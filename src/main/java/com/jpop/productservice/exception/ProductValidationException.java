@@ -1,4 +1,4 @@
-package com.epam.productservice.exception;
+package com.jpop.productservice.exception;
 
 public class ProductValidationException extends RuntimeException {
 

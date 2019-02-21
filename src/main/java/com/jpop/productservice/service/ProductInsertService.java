@@ -1,6 +1,6 @@
-package com.epam.productservice.service;
+package com.jpop.productservice.service;
 
-import com.epam.productservice.model.Product;
+import com.jpop.productservice.model.Product;
 
 public interface ProductInsertService {
 

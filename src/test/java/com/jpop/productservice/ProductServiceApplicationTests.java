@@ -1,4 +1,4 @@
-package com.epam.productservice;
+package com.jpop.productservice;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

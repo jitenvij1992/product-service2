@@ -1,4 +1,4 @@
-package com.epam.productservice.model;
+package com.jpop.productservice.model;
 
 import com.google.common.base.Objects;
 
@@ -13,7 +13,7 @@ public class Product {
     @Id
     @GeneratedValue
     private int id;
-    
+
     private String name;
     private String description;
     private BigDecimal price;

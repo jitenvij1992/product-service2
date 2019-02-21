@@ -1,9 +1,9 @@
-package com.epam.productservice.service.impl;
+package com.jpop.productservice.service.impl;
 
-import com.epam.productservice.dao.ProductInsertRepository;
-import com.epam.productservice.exception.ProductValidationException;
-import com.epam.productservice.model.Product;
-import com.epam.productservice.service.ProductInsertService;
+import com.jpop.productservice.dao.ProductInsertRepository;
+import com.jpop.productservice.exception.ProductValidationException;
+import com.jpop.productservice.model.Product;
+import com.jpop.productservice.service.ProductInsertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package com.epam.productservice.exception;
+package com.jpop.productservice.exception;
 
-import com.epam.productservice.model.ErrorDetails;
+import com.jpop.productservice.model.ErrorDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

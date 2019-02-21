@@ -1,4 +1,4 @@
-package com.epam.productservice.model;
+package com.jpop.productservice.model;
 
 import java.util.Date;
 

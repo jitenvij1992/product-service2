@@ -1,7 +1,7 @@
-package com.epam.productservice.controller;
+package com.jpop.productservice.controller;
 
-import com.epam.productservice.model.Product;
-import com.epam.productservice.service.ProductInsertService;
+import com.jpop.productservice.model.Product;
+import com.jpop.productservice.service.ProductInsertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
