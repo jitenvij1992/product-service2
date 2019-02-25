@@ -22,7 +22,7 @@ public class ProductDeleteServiceImpl implements ProductDeleteService {
         if(productDeleteRepository.findById(id).isPresent()) {
             productDeleteRepository.deleteById(id);
         } else {
-            throw new ProductDeletionException("Product id {} doesn't exist.");
+            throw new ProductDeletionException("Product id doesn't exist.");
         }
     }
 }
