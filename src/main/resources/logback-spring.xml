@@ -39,7 +39,7 @@
     </root>
 
     <!-- LOG "com.epam*" at DEBUG level -->
-    <logger name="com.epam" level="debug" additivity="false">
+    <logger name="com.jpop" level="debug" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>

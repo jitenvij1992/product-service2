@@ -17,9 +17,15 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(ProductValidationException.class)
     public final ResponseEntity<ErrorDetails> invalidProductDetails( ProductValidationException ex, WebRequest request) {
-
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
-
     }
+
+    @ExceptionHandler({InvalidProductDetailException.class, ProductDeletionException.class})
+    public final ResponseEntity<ErrorDetails> invalidProductId( InvalidProductDetailException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
+    }
+
+
 }
