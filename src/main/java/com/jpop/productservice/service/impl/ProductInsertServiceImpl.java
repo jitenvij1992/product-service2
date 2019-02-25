@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -29,6 +30,15 @@ public class ProductInsertServiceImpl implements ProductInsertService {
         }
         logger.info("Validation completed for the product.");
         productInsertRepository.save(product);
+        logger.info("Successfully saved data!!");
+    }
+
+    @Override
+    public void processUpdatedData(Product product, long id) {
+        if(!productInsertRepository.findById(id).isPresent())
+            throw new ProductValidationException("No Product found having id: " +id);
+        product.setId(id);
+        processRawData(product);
     }
 
     private boolean validateRawData(Product product) {

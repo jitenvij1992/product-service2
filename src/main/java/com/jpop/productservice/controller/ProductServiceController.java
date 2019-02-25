@@ -12,11 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- *
- */
+import java.util.List;
+
 @RestController
-@RequestMapping(value = "/api/v1/product")
+@RequestMapping(value = "/api/v1/products")
 public class ProductServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceController.class);
@@ -29,6 +28,11 @@ public class ProductServiceController {
         this.productInsertService = productInsertService;
         this.productDetailService = productDetailService;
         this.productDeleteService = productDeleteService;
+    }
+
+    @GetMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productDetailService.getAvailableProducts());
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,8 +58,10 @@ public class ProductServiceController {
         return ResponseEntity.ok("Successfully deleted data");
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateProduct() {
-        return null;
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateProduct(@RequestBody Product payload, @PathVariable long id) {
+        logger.info("Received request to update the product having product id {} and payload {}", id, payload);
+        productInsertService.processUpdatedData(payload, id);
+        return ResponseEntity.ok("Updated data successfully ");
     }
 }

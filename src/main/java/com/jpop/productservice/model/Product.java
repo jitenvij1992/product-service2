@@ -19,6 +19,14 @@ public class Product {
     private String description;
     private BigDecimal price;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -48,20 +56,22 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equal(name, product.name) &&
+        return id == product.id &&
+                Objects.equal(name, product.name) &&
                 Objects.equal(description, product.description) &&
                 Objects.equal(price, product.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name, description, price);
+        return Objects.hashCode(id, name, description, price);
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
