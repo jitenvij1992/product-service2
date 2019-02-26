@@ -16,19 +16,19 @@ import java.util.Date;
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ProductValidationException.class)
-    public final ResponseEntity<ErrorDetails> invalidProductDetails( ProductValidationException ex, WebRequest request) {
+    public final ResponseEntity<ErrorDetails> invalidProductDetails(ProductValidationException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({InvalidProductDetailException.class})
-    public final ResponseEntity<ErrorDetails> invalidProductId( InvalidProductDetailException ex,  WebRequest request) {
+    public final ResponseEntity<ErrorDetails> invalidProductId(InvalidProductDetailException ex,  WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler({ProductDeletionException.class})
-    public final ResponseEntity<ErrorDetails> invalidDeleteProductId( ProductDeletionException ex,  WebRequest request) {
+    public final ResponseEntity<ErrorDetails> invalidDeleteProductId(ProductDeletionException ex,  WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
     }
