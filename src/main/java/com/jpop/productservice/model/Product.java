@@ -1,12 +1,11 @@
 package com.jpop.productservice.model;
 
-import com.google.common.base.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 public class Product {
@@ -67,14 +66,14 @@ public class Product {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return id == product.id &&
-                Objects.equal(name, product.name) &&
-                Objects.equal(description, product.description) &&
-                Objects.equal(price, product.price);
+                Objects.equals(name, product.name) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(price, product.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, name, description, price);
+        return Objects.hash(id, name, description, price);
     }
 
     @Override

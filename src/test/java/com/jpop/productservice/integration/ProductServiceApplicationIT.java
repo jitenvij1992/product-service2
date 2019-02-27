@@ -30,11 +30,11 @@ public class ProductServiceApplicationIT {
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity httpEntity = new HttpEntity(null, headers);
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange(createUrl("/api/v1/products/"), HttpMethod.GET, httpEntity, String.class);
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(createUrl(), HttpMethod.GET, httpEntity, String.class);
         assertEquals("Status code is invalid", 200, responseEntity.getStatusCode().value());
     }
 
-    private String createUrl(String s) {
-        return "http://localhost:" + port + s;
+    private String createUrl() {
+        return "http://localhost:" + port + "/api/v1/products/";
     }
 }
