@@ -1,6 +1,7 @@
 package com.jpop.productservice.controller;
 
-import com.jpop.productservice.exception.ProductDeletionException;
+import com.google.gson.Gson;
+import com.jpop.productservice.exception.ProductNotFoundException;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.service.ProductDeleteService;
 import com.jpop.productservice.service.ProductDetailService;
@@ -78,9 +79,19 @@ public class ProductServiceControllerTest {
 
     @Test
     public void deleteProductByIdWhenException() throws Exception {
-        Mockito.doThrow(ProductDeletionException.class).when(productDeleteService).deleteProduct(8);
+        Mockito.doThrow(ProductNotFoundException.class).when(productDeleteService).deleteProduct(8);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/8")
                 .contentType(MediaType.APPLICATION_JSON)).
                 andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateProduct() throws Exception {
+        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
+        Mockito.doNothing().when(productInsertService).processUpdatedData(product, 1);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson(product)))
+                .andExpect(status().isOk());
     }
 }

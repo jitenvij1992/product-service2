@@ -21,15 +21,10 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({InvalidProductDetailException.class})
-    public final ResponseEntity<ErrorDetails> invalidProductId(InvalidProductDetailException ex,  WebRequest request) {
+    @ExceptionHandler({ProductNotFoundException.class})
+    public final ResponseEntity<ErrorDetails> invalidProductId(ProductNotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler({ProductDeletionException.class})
-    public final ResponseEntity<ErrorDetails> invalidDeleteProductId(ProductDeletionException ex,  WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.NO_CONTENT);
-    }
 }

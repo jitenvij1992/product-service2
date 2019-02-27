@@ -1,7 +1,7 @@
 package com.jpop.productservice.service.impl;
 
 import com.jpop.productservice.dao.ProductDeleteRepository;
-import com.jpop.productservice.exception.ProductDeletionException;
+import com.jpop.productservice.exception.ProductNotFoundException;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.service.ProductDeleteService;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -44,8 +43,9 @@ public class ProductDeleteServiceImplTest {
         verify(productDeleteRepository, times(1)).deleteById(1L);
     }
 
-    @Test(expected = ProductDeletionException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void deleteProductWithException() {
+        when(productDeleteRepository.findById(1l)).thenThrow(ProductNotFoundException.class);
         Mockito.doNothing().when(productDeleteRepository).deleteById(1L);
         productDeleteService.deleteProduct(1L);
         verify(productDeleteRepository, times(1)).deleteById(1L);

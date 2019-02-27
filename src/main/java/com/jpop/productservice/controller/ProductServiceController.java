@@ -8,6 +8,7 @@ import com.jpop.productservice.service.ProductInsertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,12 @@ public class ProductServiceController {
         return ResponseEntity.ok(productDetailService.getAvailableProducts());
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> insertProduct(@RequestBody Product payload) {
 
         logger.info("Payload received to insert data in product service with value {}", payload);
         productInsertService.processRawData(payload);
-        return ResponseEntity.ok("Successfully added product in repository");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added product in repository");
     }
 
     @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
