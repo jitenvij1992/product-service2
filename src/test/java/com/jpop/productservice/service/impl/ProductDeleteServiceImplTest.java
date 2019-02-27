@@ -22,7 +22,6 @@ public class ProductDeleteServiceImplTest {
 
     @TestConfiguration
     static class ProductDeleteServiceImplConfig {
-
         @Bean
         ProductDeleteService productDeleteService() {
             return new ProductDeleteServiceImpl();

@@ -24,10 +24,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 public class ProductDetailServiceImplTest {
 
-
     @TestConfiguration
     static class ProductDetailServiceImplTestConfig {
-
         @Bean
         ProductDetailService productDetailService() {
             return new ProductDetailServiceImpl();
@@ -46,7 +44,6 @@ public class ProductDetailServiceImplTest {
         List productList = Arrays.asList(product);
         Mockito.when(productDetailRepository.findById(1l)).thenReturn(java.util.Optional.of(product));
         Mockito.when(productDetailRepository.findAll()).thenReturn(productList);
-
     }
 
     @Test
