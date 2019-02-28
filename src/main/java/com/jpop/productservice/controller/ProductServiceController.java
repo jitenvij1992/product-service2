@@ -2,18 +2,23 @@ package com.jpop.productservice.controller;
 
 import com.google.gson.Gson;
 import com.jpop.productservice.model.Product;
+import com.jpop.productservice.model.dto.ProductDTO;
 import com.jpop.productservice.service.ProductDeleteService;
 import com.jpop.productservice.service.ProductDetailService;
 import com.jpop.productservice.service.ProductInsertService;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(value = "/api/v1/products")
@@ -31,20 +36,27 @@ public class ProductServiceController {
         this.productDeleteService = productDeleteService;
     }
 
-    @GetMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productDetailService.getAvailableProducts());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> insertProduct(@RequestBody Product payload) {
+    public ResponseEntity<Product> insertProduct(@RequestBody ProductDTO payload) {
 
         logger.info("Payload received to insert data in product service with value {}", payload);
-        productInsertService.processRawData(payload);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added product in repository");
+        ModelMapper modelMapper = new ModelMapper();
+        Product productMap = modelMapper.map(payload, Product.class);
+        Product savedProduct = productInsertService.processRawData(productMap);
+        final URI uri =
+                MvcUriComponentsBuilder.fromController(getClass())
+                        .path("/{id}")
+                        .buildAndExpand(savedProduct.getId())
+                        .toUri();
+        return ResponseEntity.created(uri).body(savedProduct);
     }
 
-    @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getProductDetails(@PathVariable long id) {
 
         logger.info("Received request to get details of product having id {}", id);
@@ -52,7 +64,7 @@ public class ProductServiceController {
         return ResponseEntity.ok(productData);
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteProductById(@PathVariable long id) {
         logger.info("Request received to delete product having id {}", id);
         productDeleteService.deleteProduct(id);
@@ -60,9 +72,11 @@ public class ProductServiceController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateProduct(@RequestBody Product payload, @PathVariable long id) {
+    public ResponseEntity updateProduct(@RequestBody ProductDTO payload, @PathVariable long id) {
         logger.info("Received request to update the product having product id {} and payload {}", id, payload);
-        productInsertService.processUpdatedData(payload, id);
+        ModelMapper modelMapper = new ModelMapper();
+        Product productMap = modelMapper.map(payload, Product.class);
+        productInsertService.processUpdatedData(productMap, id);
         return ResponseEntity.ok("Updated data successfully ");
     }
 }

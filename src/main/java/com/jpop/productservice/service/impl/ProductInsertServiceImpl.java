@@ -21,7 +21,7 @@ public class ProductInsertServiceImpl implements ProductInsertService {
     private ProductInsertRepository productInsertRepository;
 
     @Override
-    public void processRawData(Product product) {
+    public Product processRawData(Product product) {
         logger.info("Validating product data having values {}", product);
 
         if (validateRawData(product)) {
@@ -29,8 +29,8 @@ public class ProductInsertServiceImpl implements ProductInsertService {
             throw new ProductValidationException("Product item is not valid with value: "+ product);
         }
         logger.info("Validation completed for the product.");
-        productInsertRepository.save(product);
-        logger.info("Successfully saved data!!");
+        return productInsertRepository.save(product);
+
     }
 
     @Override
