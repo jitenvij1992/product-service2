@@ -2,20 +2,14 @@ package com.jpop.productservice.integration;
 
 import com.google.gson.Gson;
 import com.jpop.productservice.ProductServiceApplication;
-import com.jpop.productservice.dao.ProductInsertRepository;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.service.ProductDetailService;
-import com.jpop.productservice.service.ProductInsertService;
 import com.jpop.productservice.service.impl.ProductDetailServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
@@ -24,10 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @RunWith(SpringRunner.class)
