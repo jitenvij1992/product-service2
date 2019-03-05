@@ -70,11 +70,11 @@ public class ProductServiceControllerTest {
 
     @Test
     public void deleteProductById() throws Exception {
-       Mockito.doNothing().when(productDeleteService).deleteProduct(1);
-       mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/1")
-               .contentType(MediaType.APPLICATION_JSON)
-               .accept(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk());
+        Mockito.doNothing().when(productDeleteService).deleteProduct(1);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/products/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
