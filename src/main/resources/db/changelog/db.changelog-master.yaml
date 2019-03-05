@@ -1,44 +1,5 @@
 databaseChangeLog:
-  - changeSet:
-      id: 3
-      author: jitenvij
-      changes:
-        - dropTable:
-            tableName: person
-  - changeSet:
-      id: 4
-      author: jitenvij
-      changes:
-        - createTable:
-            tableName: person
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: first_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: last_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-  - changeSet:
-      id: 5
-      author: jitenvij1992
-      changes:
-        - insert:
-            tableName: person
-            columns:
-              - column:
-                  name: first_name
-                  value: Jiten
-              - column:
-                  name: last_name
-                  value: Vij
+  - include:
+      file: /db/changelog/db/db.changelog-ddl.yaml
+  - include:
+      file: /db/changelog/db/db.changelog-dml.yaml

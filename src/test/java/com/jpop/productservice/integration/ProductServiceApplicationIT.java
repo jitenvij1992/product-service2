@@ -79,6 +79,27 @@ public class ProductServiceApplicationIT {
         assertEquals("Name is not correct",product.getName(), responseEntity.getBody().getName());
     }
 
+    @Test
+    public void testUpdateProduct() {
+        Product product = new Product(2, "Jeans", "Adidas", new BigDecimal(123.98));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity httpEntity = new HttpEntity(new Gson().toJson(product), headers);
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(createUrl("/api/v1/products/2"), HttpMethod.PUT, httpEntity, String.class);
+        assertEquals("Status code is invalid", 200, responseEntity.getStatusCode().value());
+    }
+
+    @Test
+    public void testDeleteProduct() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity httpEntity = new HttpEntity(null, headers);
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(createUrl("/api/v1/products/2"), HttpMethod.DELETE, httpEntity, String.class);
+        assertEquals("Status code is invalid", 200, responseEntity.getStatusCode().value());
+    }
+
     private String createUrl(String path) {
         return "http://localhost:" + port + path;
     }

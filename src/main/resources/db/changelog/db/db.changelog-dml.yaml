@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 79
+      author: jitenvij1992
+      changes:
+        - insert:
+            tableName: person
+            columns:
+              - column:
+                  name: first_name
+                  value: Jiten
+              - column:
+                  name: last_name
+                  value: Vij

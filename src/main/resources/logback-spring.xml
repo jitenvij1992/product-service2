@@ -38,6 +38,8 @@
         <appender-ref ref="Console" />
     </root>
 
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR"/>
+
     <!-- LOG "com.epam*" at DEBUG level -->
     <logger name="com.jpop" level="debug" additivity="false">
         <appender-ref ref="RollingFile" />

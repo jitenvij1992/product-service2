@@ -18,7 +18,7 @@ public class ProductDeleteServiceImpl implements ProductDeleteService {
 
     @Override
     public void deleteProduct(long id) {
-        logger.info("Servicing the request to delete product having id {}", id);
+        logger.info("Servicing request to delete product having id {}", id);
         productDeleteRepository.findById(id)
                 .ifPresentOrElse(product -> productDeleteRepository.deleteById(id),
                         () -> new ProductNotFoundException(""));
