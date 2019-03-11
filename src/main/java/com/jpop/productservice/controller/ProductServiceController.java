@@ -3,6 +3,7 @@ package com.jpop.productservice.controller;
 import com.google.gson.Gson;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.model.dto.ProductDTO;
+import com.jpop.productservice.model.dto.ProductReviewDTO;
 import com.jpop.productservice.service.ProductDeleteService;
 import com.jpop.productservice.service.ProductDetailService;
 import com.jpop.productservice.service.ProductInsertService;
@@ -11,18 +12,18 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,9 +31,12 @@ import java.util.stream.Collectors;
 public class ProductServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceController.class);
+    @Autowired
+    RestTemplate restTemplate;
     private ProductInsertService productInsertService;
     private ProductDetailService productDetailService;
     private ProductDeleteService productDeleteService;
+
 
     @Autowired
     public ProductServiceController(ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService) {
@@ -47,6 +51,19 @@ public class ProductServiceController {
     })
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> availableProducts = productDetailService.getAvailableProducts();
+
+        ResponseEntity<List> responseEntity = restTemplate.exchange("http://localhost:8011/api/v1/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
+        if (responseEntity.getStatusCode().value() == 200) {
+            List<List<Map<String, String>>> reviewList = responseEntity.getBody();
+//            for (Review review: reviewList) {
+//                for (Product availableProduct: availableProducts) {
+//
+//                }
+//            }
+
+        }
+
         return ResponseEntity.ok(productDetailService.getAvailableProducts());
     }
 
@@ -79,10 +96,16 @@ public class ProductServiceController {
             @ApiResponse(code = 204, message = "Invalid ID supplied")
     })
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getProductDetails(@ApiParam(value = "Numeric Product ID that needs to be find", required = true)@PathVariable long id) {
+    public ResponseEntity<String> getProductDetails(@ApiParam(value = "Numeric Product ID that needs to be find", required = true) @PathVariable long id) {
 
         logger.info("Received request to get details of product having id {}", id);
-        String productData = new Gson().toJson(productDetailService.getProductDetails(id));
+        ProductReviewDTO productReviewDTO = new ProductReviewDTO();
+        productReviewDTO.setProduct(productDetailService.getProductDetails(id));
+        ResponseEntity<List> responseEntity = restTemplate.exchange("http://localhost:8011/api/v1/" + id + "/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
+        if (responseEntity.getStatusCode().value() == 200) {
+            productReviewDTO.setReview(responseEntity.getBody());
+        }
+        String productData = new Gson().toJson(productReviewDTO);
         return ResponseEntity.ok(productData);
     }
 
@@ -92,7 +115,7 @@ public class ProductServiceController {
             @ApiResponse(code = 204, message = "Invalid ID supplied")
     })
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteProductById(@ApiParam(value = "Numeric Product ID that need to be delete", required = true)@PathVariable long id) {
+    public ResponseEntity deleteProductById(@ApiParam(value = "Numeric Product ID that need to be delete", required = true) @PathVariable long id) {
         logger.info("Request received to delete product having id {}", id);
         productDeleteService.deleteProduct(id);
         return ResponseEntity.ok("Successfully deleted data");

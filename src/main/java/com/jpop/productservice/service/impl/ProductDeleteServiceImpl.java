@@ -21,6 +21,8 @@ public class ProductDeleteServiceImpl implements ProductDeleteService {
         logger.info("Servicing request to delete product having id {}", id);
         productDeleteRepository.findById(id)
                 .ifPresentOrElse(product -> productDeleteRepository.deleteById(id),
-                        () -> new ProductNotFoundException(""));
+                        () -> {
+                            throw new ProductNotFoundException("");
+                        });
     }
 }
