@@ -1,6 +1,7 @@
 package com.jpop.productservice.controller;
 
 import com.google.gson.Gson;
+import com.jpop.productservice.constants.Constants;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.model.dto.ProductDTO;
 import com.jpop.productservice.model.dto.ProductReviewDTO;
@@ -23,7 +24,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 public class ProductServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceController.class);
+
     @Autowired
     RestTemplate restTemplate;
     private ProductInsertService productInsertService;
     private ProductDetailService productDetailService;
     private ProductDeleteService productDeleteService;
-
 
     @Autowired
     public ProductServiceController(ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService) {
@@ -51,20 +51,26 @@ public class ProductServiceController {
     })
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> availableProducts = productDetailService.getAvailableProducts();
-
-        ResponseEntity<List> responseEntity = restTemplate.exchange("http://localhost:8011/api/v1/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
-        if (responseEntity.getStatusCode().value() == 200) {
-            List<List<Map<String, String>>> reviewList = responseEntity.getBody();
-//            for (Review review: reviewList) {
-//                for (Product availableProduct: availableProducts) {
-//
-//                }
-//            }
-
-        }
-
         return ResponseEntity.ok(productDetailService.getAvailableProducts());
+    }
+
+    @ApiOperation(value = "Find product by ID", notes = "This will be used to find the product by using product ID.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Product found in inventory"),
+            @ApiResponse(code = 204, message = "Invalid ID supplied")
+    })
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getProductDetails(@ApiParam(value = "Numeric Product ID that needs to be find", required = true) @PathVariable long id) {
+
+        logger.info("Received request to get details of product having id {}", id);
+        ProductReviewDTO productReviewDTO = new ProductReviewDTO();
+        productReviewDTO.setProduct(productDetailService.getProductDetails(id));
+        ResponseEntity<List> responseEntity = restTemplate.exchange(Constants.hostName + id + "/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
+        if (responseEntity.getStatusCode().value() == 200) {
+            productReviewDTO.setReview(responseEntity.getBody());
+        }
+        String productData = new Gson().toJson(productReviewDTO);
+        return ResponseEntity.ok(productData);
     }
 
     @ApiOperation(value = "Insert new products", notes = "This will be used to add products in inventory")
@@ -87,26 +93,6 @@ public class ProductServiceController {
                         .buildAndExpand(savedProduct.getId())
                         .toUri();
         return ResponseEntity.created(uri).body(savedProduct);
-    }
-
-
-    @ApiOperation(value = "Find product by ID", notes = "This will be used to find the product by using product ID.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Product found in inventory"),
-            @ApiResponse(code = 204, message = "Invalid ID supplied")
-    })
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getProductDetails(@ApiParam(value = "Numeric Product ID that needs to be find", required = true) @PathVariable long id) {
-
-        logger.info("Received request to get details of product having id {}", id);
-        ProductReviewDTO productReviewDTO = new ProductReviewDTO();
-        productReviewDTO.setProduct(productDetailService.getProductDetails(id));
-        ResponseEntity<List> responseEntity = restTemplate.exchange("http://localhost:8011/api/v1/" + id + "/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
-        if (responseEntity.getStatusCode().value() == 200) {
-            productReviewDTO.setReview(responseEntity.getBody());
-        }
-        String productData = new Gson().toJson(productReviewDTO);
-        return ResponseEntity.ok(productData);
     }
 
     @ApiOperation(value = "Delete product by ID", notes = "This will be used to delete the product by using product ID.")

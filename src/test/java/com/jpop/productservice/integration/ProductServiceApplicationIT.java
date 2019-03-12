@@ -7,16 +7,20 @@ import com.jpop.productservice.service.ProductDetailService;
 import com.jpop.productservice.service.impl.ProductDetailServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,6 +38,8 @@ public class ProductServiceApplicationIT {
 
     @Autowired
     ProductDetailService productDetailService;
+    @MockBean
+    RestTemplate restTemplate;
 
     @TestConfiguration
     static class ProductServiceApplicationITConfig {
@@ -57,10 +63,13 @@ public class ProductServiceApplicationIT {
 
     @Test
     public void testGetProductByID() {
+        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity httpEntity = new HttpEntity(null, headers);
+        Mockito.when(restTemplate.exchange("http://localhost:8011/api/v1/1/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class))
+                .thenReturn(new ResponseEntity(List.of(product), HttpStatus.OK));
 
         ResponseEntity<String> responseEntity = testRestTemplate.exchange(createUrl("/api/v1/products/1"), HttpMethod.GET, httpEntity, String.class);
         assertEquals("Status code is invalid", 200, responseEntity.getStatusCode().value());
