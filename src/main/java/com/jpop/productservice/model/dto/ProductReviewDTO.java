@@ -1,22 +1,49 @@
 package com.jpop.productservice.model.dto;
 
-import com.jpop.productservice.model.Product;
 import com.jpop.productservice.model.Review;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 
 public class ProductReviewDTO {
 
-    private Product product;
+    private long id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+
     private List<Review> review;
 
-    public Product getProduct() {
-        return product;
+    public long getId() {
+        return id;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public List<Review> getReview() {
@@ -25,27 +52,5 @@ public class ProductReviewDTO {
 
     public void setReview(List<Review> review) {
         this.review = review;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductReviewDTO that = (ProductReviewDTO) o;
-        return Objects.equals(product, that.product) &&
-                Objects.equals(review, that.review);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(product, review);
-    }
-
-    @Override
-    public String toString() {
-        return "ProductReviewDTO{" +
-                "product=" + product +
-                ", review=" + review +
-                '}';
     }
 }

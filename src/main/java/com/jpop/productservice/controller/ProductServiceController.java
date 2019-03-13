@@ -8,12 +8,15 @@ import com.jpop.productservice.model.dto.ProductReviewDTO;
 import com.jpop.productservice.service.ProductDeleteService;
 import com.jpop.productservice.service.ProductDetailService;
 import com.jpop.productservice.service.ProductInsertService;
+import com.jpop.productservice.service.ProductReviewService;
 import io.swagger.annotations.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +40,15 @@ public class ProductServiceController {
     private ProductInsertService productInsertService;
     private ProductDetailService productDetailService;
     private ProductDeleteService productDeleteService;
+    private ProductReviewService productReviewService;
 
     @Autowired
-    public ProductServiceController(ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService) {
+    public ProductServiceController(RestTemplate restTemplate, ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService, ProductReviewService productReviewService) {
+        this.restTemplate = restTemplate;
         this.productInsertService = productInsertService;
         this.productDetailService = productDetailService;
         this.productDeleteService = productDeleteService;
+        this.productReviewService = productReviewService;
     }
 
     @ApiOperation(value = "Get all products", notes = "This will be used to get all the products in inventory")
@@ -63,9 +69,11 @@ public class ProductServiceController {
     public ResponseEntity<String> getProductDetails(@ApiParam(value = "Numeric Product ID that needs to be find", required = true) @PathVariable long id) {
 
         logger.info("Received request to get details of product having id {}", id);
-        ProductReviewDTO productReviewDTO = new ProductReviewDTO();
-        productReviewDTO.setProduct(productDetailService.getProductDetails(id));
-        ResponseEntity<List> responseEntity = restTemplate.exchange(Constants.hostName + id + "/reviews", HttpMethod.GET, HttpEntity.EMPTY, List.class);
+        Product productDetails = productDetailService.getProductDetails(id);
+        ModelMapper modelMapper = new ModelMapper();
+        ProductReviewDTO productReviewDTO = modelMapper.map(productDetails, ProductReviewDTO.class);
+
+        ResponseEntity<List> responseEntity = productReviewService.callReviewServiceForGet(Constants.HOSTNAME + id + Constants.SLASH + Constants.REVIEW);
         if (responseEntity.getStatusCode().value() == 200) {
             productReviewDTO.setReview(responseEntity.getBody());
         }
