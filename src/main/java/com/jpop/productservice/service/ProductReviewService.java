@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface ProductReviewService {
 
-    ResponseEntity<Review> callReviewServiceForPost(String url, ReviewDTO reviewDTO);
+    ResponseEntity<Review> create(long id, ReviewDTO reviewDTO);
 
-    ResponseEntity callReviewServiceForDelete(String s);
+    ResponseEntity delete(long productId, long reviewId);
 
-    ResponseEntity<String> callReviewServiceForPut(String s, ReviewDTO payload);
+    ResponseEntity<String> put(long productId, long reviewId, ReviewDTO payload);
 
-    ResponseEntity<List> callReviewServiceForGet(String s);
+    ResponseEntity<List> get(long productId);
 }

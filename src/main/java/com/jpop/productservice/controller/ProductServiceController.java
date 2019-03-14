@@ -1,7 +1,6 @@
 package com.jpop.productservice.controller;
 
 import com.google.gson.Gson;
-import com.jpop.productservice.constants.Constants;
 import com.jpop.productservice.model.Product;
 import com.jpop.productservice.model.dto.ProductDTO;
 import com.jpop.productservice.model.dto.ProductReviewDTO;
@@ -35,7 +34,6 @@ public class ProductServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceController.class);
 
-    @Autowired
     RestTemplate restTemplate;
     private ProductInsertService productInsertService;
     private ProductDetailService productDetailService;
@@ -73,7 +71,7 @@ public class ProductServiceController {
         ModelMapper modelMapper = new ModelMapper();
         ProductReviewDTO productReviewDTO = modelMapper.map(productDetails, ProductReviewDTO.class);
 
-        ResponseEntity<List> responseEntity = productReviewService.callReviewServiceForGet(Constants.HOSTNAME + id + Constants.SLASH + Constants.REVIEW);
+        ResponseEntity<List> responseEntity = productReviewService.get(id);
         if (responseEntity.getStatusCode().value() == 200) {
             productReviewDTO.setReview(responseEntity.getBody());
         }

@@ -7,6 +7,7 @@ import com.jpop.productservice.service.ProductDeleteService;
 import com.jpop.productservice.service.ProductDetailService;
 import com.jpop.productservice.service.ProductInsertService;
 import com.jpop.productservice.service.ProductReviewService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,13 +50,17 @@ public class ProductServiceControllerTest {
     ProductReviewService productReviewService;
     @MockBean
     private ProductDeleteService productDeleteService;
+    Product product;
+
+    @Before
+    public void setUp() {
+        product = new Product(1, "Shirt", "Adidas", BigDecimal.valueOf(123.98));
+    }
 
     @Test
     public void getAllProducts() throws Exception {
 
-        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
         List<Product> productList = Arrays.asList(product);
-
         given(productDetailService.getAvailableProducts()).willReturn(productList);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -66,10 +71,8 @@ public class ProductServiceControllerTest {
 
     @Test
     public void getProductDetails() throws Exception {
-        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
-        final String expectedString = "{id=1, name=Shirt, description=Adidas, price=123.9800000000000039790393202565610408782958984375}";
         given(productDetailService.getProductDetails(1)).willReturn(product);
-        Mockito.when(productReviewService.callReviewServiceForGet(anyString()))
+        Mockito.when(productReviewService.get(anyLong()))
                 .thenReturn(new ResponseEntity(List.of(product), HttpStatus.OK));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/1")
@@ -98,7 +101,6 @@ public class ProductServiceControllerTest {
 
     @Test
     public void updateProduct() throws Exception {
-        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
         Mockito.doNothing().when(productInsertService).processUpdatedData(product, 1);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/products/8")
                 .contentType(MediaType.APPLICATION_JSON)

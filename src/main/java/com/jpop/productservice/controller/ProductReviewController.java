@@ -1,6 +1,5 @@
 package com.jpop.productservice.controller;
 
-import com.jpop.productservice.constants.Constants;
 import com.jpop.productservice.model.Review;
 import com.jpop.productservice.model.dto.ReviewDTO;
 import com.jpop.productservice.service.ProductReviewService;
@@ -42,7 +41,7 @@ public class ProductReviewController {
     @PostMapping(value = "/{id}/reviews", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Review> postReview(@PathVariable long id, @RequestBody ReviewDTO payload) {
         logger.info("Received request to insert review having product id {} and payload {}", id, payload);
-        ResponseEntity<Review> responseEntity = productReviewService.callReviewServiceForPost(Constants.HOSTNAME + id + Constants.SLASH + Constants.REVIEW, payload);
+        ResponseEntity<Review> responseEntity = productReviewService.create(id, payload);
         Review review = responseEntity.getBody();
         final URI uri =
                 MvcUriComponentsBuilder.fromController(getClass())
@@ -59,7 +58,7 @@ public class ProductReviewController {
     @DeleteMapping(value = "/products/{id}/reviews/{reviewId}")
     public ResponseEntity deleteReview(@PathVariable("id") long productId, @PathVariable("reviewId") long reviewId) {
         logger.info("Request received to delete the review having product Id {} and review Id {}", productId, reviewId);
-        return productReviewService.callReviewServiceForDelete(Constants.HOSTNAME + productId + Constants.SLASH + Constants.REVIEW + Constants.SLASH + reviewId);
+        return productReviewService.delete(productId, reviewId);
     }
 
     @ApiOperation(value = "Update review by ID", notes = "This will be used to update the review by using product ID and review.")
@@ -69,6 +68,6 @@ public class ProductReviewController {
     @PutMapping(value = "/{id}/reviews/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateReview(@PathVariable("id") long productId, @PathVariable("reviewId") long reviewId, @RequestBody ReviewDTO payload) {
         logger.info("Request received to update the review having product Id {} and review Id {}", productId, reviewId);
-        return productReviewService.callReviewServiceForPut(Constants.HOSTNAME + productId + Constants.SLASH + Constants.REVIEW + Constants.SLASH + reviewId, payload);
+        return productReviewService.put(productId, reviewId, payload);
     }
 }

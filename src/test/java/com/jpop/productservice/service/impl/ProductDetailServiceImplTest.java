@@ -40,7 +40,7 @@ public class ProductDetailServiceImplTest {
 
     @Before
     public void setUp() {
-        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
+        Product product = new Product(1, "Shirt", "Adidas", BigDecimal.valueOf(123.98));
         List productList = Arrays.asList(product);
         Mockito.when(productDetailRepository.findById(1l)).thenReturn(java.util.Optional.of(product));
         Mockito.when(productDetailRepository.findAll()).thenReturn(productList);

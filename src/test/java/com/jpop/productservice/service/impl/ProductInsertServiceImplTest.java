@@ -37,7 +37,7 @@ public class ProductInsertServiceImplTest {
 
     @Test
     public void processRawData() {
-        Product product = new Product(1, "Shirt", "Adidas", new BigDecimal(123.98));
+        Product product = new Product(1, "Shirt", "Adidas", BigDecimal.valueOf(123.98));
         productInsertService.processRawData(product);
         verify(productInsertRepository, times(1)).save(product);
 
@@ -45,7 +45,7 @@ public class ProductInsertServiceImplTest {
 
     @Test(expected = ProductValidationException.class)
     public void processUpdatedData() {
-        Product product = new Product(1, null, "Adidas", new BigDecimal(123.98));
+        Product product = new Product(1, null, "Adidas", BigDecimal.valueOf(123.98));
         productInsertService.processRawData(product);
         verify(productInsertRepository, times(1)).save(product);
     }
