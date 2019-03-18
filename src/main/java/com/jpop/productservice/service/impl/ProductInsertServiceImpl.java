@@ -30,7 +30,6 @@ public class ProductInsertServiceImpl implements ProductInsertService {
         }
         logger.info("Validation completed for the product.");
         return productInsertRepository.save(product);
-
     }
 
     @Override
