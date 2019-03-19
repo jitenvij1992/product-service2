@@ -24,14 +24,14 @@ public class ProductReviewController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductReviewController.class);
 
-    @Autowired
     private RestTemplate restTemplate;
 
     private ProductReviewService productReviewService;
 
     @Autowired
-    public ProductReviewController(ProductReviewService productReviewService) {
+    public ProductReviewController(ProductReviewService productReviewService, RestTemplate restTemplate) {
         this.productReviewService = productReviewService;
+        this.restTemplate = restTemplate;
     }
 
     @ApiOperation(value = "Insert new review", notes = "This will be used to add review in inventory")
