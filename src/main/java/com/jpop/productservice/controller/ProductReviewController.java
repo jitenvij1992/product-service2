@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.net.URI;
@@ -24,14 +23,11 @@ public class ProductReviewController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductReviewController.class);
 
-    private RestTemplate restTemplate;
-
     private ProductReviewService productReviewService;
 
     @Autowired
-    public ProductReviewController(ProductReviewService productReviewService, RestTemplate restTemplate) {
+    public ProductReviewController(ProductReviewService productReviewService) {
         this.productReviewService = productReviewService;
-        this.restTemplate = restTemplate;
     }
 
     @ApiOperation(value = "Insert new review", notes = "This will be used to add review in inventory")
@@ -48,6 +44,7 @@ public class ProductReviewController {
                         .path("/{id}/review")
                         .buildAndExpand(review.getId())
                         .toUri();
+
         return ResponseEntity.created(uri).body(review);
     }
 
