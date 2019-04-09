@@ -12,3 +12,7 @@ eureka:
 review:
   application:
     name: review-service
+
+feign:
+  hystrix:
+    enabled: true

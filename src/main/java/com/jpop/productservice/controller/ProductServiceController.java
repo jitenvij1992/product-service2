@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -34,15 +33,14 @@ public class ProductServiceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceController.class);
 
-    RestTemplate restTemplate;
     private ProductInsertService productInsertService;
     private ProductDetailService productDetailService;
     private ProductDeleteService productDeleteService;
     private ProductReviewService productReviewService;
 
     @Autowired
-    public ProductServiceController(RestTemplate restTemplate, ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService, ProductReviewService productReviewService) {
-        this.restTemplate = restTemplate;
+    public ProductServiceController(ProductInsertService productInsertService, ProductDetailService productDetailService, ProductDeleteService productDeleteService, ProductReviewService productReviewService) {
+
         this.productInsertService = productInsertService;
         this.productDetailService = productDetailService;
         this.productDeleteService = productDeleteService;
@@ -130,5 +128,4 @@ public class ProductServiceController {
     private String createErrorString(Errors errors) {
         return errors.getAllErrors().stream().map(ObjectError::toString).collect(Collectors.joining(","));
     }
-
 }
